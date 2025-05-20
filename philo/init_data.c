@@ -6,12 +6,20 @@
 /*   By: gpirozzi <giovannipirozzi12345@gmail.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 13:14:33 by gpirozzi          #+#    #+#             */
-/*   Updated: 2025/03/27 10:29:33 by gpirozzi         ###   ########.fr       */
+/*   Updated: 2025/05/20 17:32:05 by gpirozzi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
+/**
+ * Assigns forks to a philosopher based on their ID.
+ * Ensures even-numbered philosophers pick up the forks in a reversed order to avoid deadlock.
+ *
+ * @param philo Pointer to the philosopher.
+ * @param forks Array of forks.
+ * @param i Index of the philosopher in the array.
+ */
 static void	assign_fork(t_philo *philo, t_fork *forks, int i)
 {
 	philo->first_fork = &forks[(i + 1) % philo->table->philo_nbr];
@@ -23,6 +31,14 @@ static void	assign_fork(t_philo *philo, t_fork *forks, int i)
 	}
 }
 
+/**
+ * Initializes each philosopher in the table.
+ * Sets initial states, IDs, associates forks, and initializes mutexes.
+ * Also sets the simulation start time.
+ *
+ * @param table Pointer to the simulation table.
+ * @return 0 on success, -1 on failure.
+ */
 static int	philo_init(t_table *table)
 {
 	int		i;
@@ -46,6 +62,13 @@ static int	philo_init(t_table *table)
 	return (0);
 }
 
+/**
+ * Initializes simulation data including philosophers, forks, and mutexes.
+ * Allocates memory and sets initial state variables.
+ *
+ * @param table Pointer to the simulation table.
+ * @return 0 on success, -1 on failure.
+ */
 long	init_data(t_table *table)
 {
 	int	i;

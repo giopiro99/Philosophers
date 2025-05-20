@@ -6,12 +6,21 @@
 /*   By: gpirozzi <giovannipirozzi12345@gmail.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 14:24:10 by gpirozzi          #+#    #+#             */
-/*   Updated: 2025/03/26 11:43:43 by gpirozzi         ###   ########.fr       */
+/*   Updated: 2025/05/20 17:37:10 by gpirozzi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_bonus.h"
 
+/**
+ * Entry point of the program.
+ * Parses input arguments, initializes data, starts the dinner simulation,
+ * and then frees all allocated resources.
+ *
+ * @param ac Argument count.
+ * @param av Argument vector (array of strings).
+ * @return 0 on success, -1 on failure.
+ */
 int	main(int ac, char **av)
 {
 	t_table	*table;

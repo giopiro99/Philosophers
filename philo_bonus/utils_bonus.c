@@ -6,18 +6,27 @@
 /*   By: gpirozzi <giovannipirozzi12345@gmail.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 14:42:26 by gpirozzi          #+#    #+#             */
-/*   Updated: 2025/03/26 19:12:38 by gpirozzi         ###   ########.fr       */
+/*   Updated: 2025/05/20 17:36:26 by gpirozzi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_bonus.h"
-#include <semaphore.h>
 
+/**
+ * Prints an error message to standard output.
+ *
+ * @param error Error message string.
+ */
 void	error_ex(const char *error)
 {
 	printf("%s", error);
 }
 
+/**
+ * Frees all allocated resources and closes semaphores.
+ *
+ * @param table Pointer to simulation table to free.
+ */
 void	free_all(t_table *table)
 {
 	if (table->forks)
@@ -40,6 +49,13 @@ void	free_all(t_table *table)
 		free(table);
 }
 
+/**
+ * Prints the current status of a philosopher in a thread-safe manner.
+ *
+ * @param philo Pointer to philosopher.
+ * @param status Status to print.
+ * @param time Current timestamp in milliseconds.
+ */
 void	write_status(t_philo *philo, t_status status, long time)
 {
 	long	start_sim;
@@ -61,6 +77,12 @@ void	write_status(t_philo *philo, t_status status, long time)
 	sem_post(philo->table->to_write);
 }
 
+/**
+ * Returns the current time in the specified format.
+ *
+ * @param format Time format (e.g., MILLISECOND).
+ * @return Current time in milliseconds, or -1 on error.
+ */
 long	gettime_b(t_time format)
 {
 	struct timeval	tv;
@@ -72,6 +94,11 @@ long	gettime_b(t_time format)
 	return (-1);
 }
 
+/**
+ * Introduces delay to desynchronize philosophers based on their ID and total count.
+ *
+ * @param philo Pointer to philosopher.
+ */
 void	desync(t_philo *philo)
 {
 	if (philo->table->philo_nbr % 2 == 0)

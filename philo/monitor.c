@@ -6,12 +6,19 @@
 /*   By: gpirozzi <giovannipirozzi12345@gmail.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 11:01:06 by gpirozzi          #+#    #+#             */
-/*   Updated: 2025/03/27 10:38:09 by gpirozzi         ###   ########.fr       */
+/*   Updated: 2025/05/20 17:29:51 by gpirozzi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
+/**
+ * Waits for all threads to be ready before starting the simulation.
+ * This function blocks until the 'threads_ready' flag in the table is set.
+ *
+ * @param philo Pointer to the philosopher struct.
+ * @return NULL when the simulation ends.
+ */
 void	*lone_philo(t_philo *philo)
 {
 	wait_threads(philo->table);
@@ -23,6 +30,13 @@ void	*lone_philo(t_philo *philo)
 	return (NULL);
 }
 
+/**
+ * Checks if a philosopher has died based on time elapsed since last meal.
+ * A philosopher is considered dead if the elapsed time exceeds 'time_to_die' and they are not full.
+ *
+ * @param philo Pointer to the philosopher struct.
+ * @return true if the philosopher has died, false otherwise.
+ */
 bool	philo_die(t_philo *philo)
 {
 	long	t_elapsed;
@@ -38,6 +52,14 @@ bool	philo_die(t_philo *philo)
 	return (false);
 }
 
+/**
+ * Monitors all philosophers during the simulation.
+ * Waits until all threads have started, then periodically checks if any philosopher has died.
+ * If a philosopher dies, sets the simulation to end and prints the death status.
+ *
+ * @param table Pointer to the simulation table.
+ * @return NULL when the monitoring ends (either on death or simulation finish).
+ */
 void	*monitor_dinner(t_table *table)
 {
 	int	i;

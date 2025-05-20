@@ -6,14 +6,20 @@
 /*   By: gpirozzi <giovannipirozzi12345@gmail.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/24 17:07:52 by gpirozzi          #+#    #+#             */
-/*   Updated: 2025/03/27 11:18:15 by gpirozzi         ###   ########.fr       */
+/*   Updated: 2025/05/20 17:38:46 by gpirozzi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_bonus.h"
-#include <semaphore.h>
-#include <signal.h>
 
+/**
+ * Monitor thread that checks if a philosopher has died.
+ * If the time since the last meal exceeds the time to die,
+ * it signals death, prints status, and ends the simulation.
+ *
+ * @param arg Pointer to the philosopher structure.
+ * @return NULL (never returns due to exit on death).
+ */
 void	*monitor_dinner(void *arg)
 {
 	long	last_meal;
@@ -37,6 +43,12 @@ void	*monitor_dinner(void *arg)
 	}
 }
 
+/**
+ * Parent process waits for the simulation to end, then kills all philosopher
+ * child processes and the monitor process, and waits for their termination.
+ *
+ * @param table Pointer to the simulation table.
+ */
 static void	parent_process(t_table *table)
 {
 	int	i;
@@ -59,6 +71,13 @@ static void	parent_process(t_table *table)
 	waitpid(table->monitor_pid, NULL, 0);
 }
 
+/**
+ * Creates a monitor child process that waits until all philosophers have eaten
+ * the required number of times. Then signals the end of the simulation.
+ * The parent process handles process cleanup.
+ *
+ * @param table Pointer to the simulation table.
+ */
 static void	monitor_process(t_table *table)
 {
 	pid_t	pid;
@@ -81,6 +100,13 @@ static void	monitor_process(t_table *table)
 		parent_process(table);
 }
 
+/**
+ * Starts the philosopher processes and the monitor process.
+ * Each philosopher runs its routine in a separate process.
+ *
+ * @param table Pointer to the simulation table.
+ * @return 0 on success, -1 on fork error.
+ */
 long	start_dinner_bonus(t_table *table)
 {
 	int		i;

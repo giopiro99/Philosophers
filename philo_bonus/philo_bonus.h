@@ -6,7 +6,7 @@
 /*   By: gpirozzi <giovannipirozzi12345@gmail.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 14:26:46 by gpirozzi          #+#    #+#             */
-/*   Updated: 2025/03/27 11:10:33 by gpirozzi         ###   ########.fr       */
+/*   Updated: 2025/05/20 17:35:24 by gpirozzi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,74 +25,183 @@
 # include <limits.h>
 # include <stdbool.h>
 
+/**
+ * Main table struct holding simulation parameters and synchronization primitives.
+ */
 typedef struct s_table	t_table;
-//philo struct
+
+/**
+ * Philosopher struct representing an individual philosopher in the simulation.
+ */
 typedef struct s_philo_b
 {
-	int			philo_id;
-	int			philo_nbr;
-	long		eating_flag;
-	long		n_eat;
-	long		last_m;
-	long		time_to_eat;
-	long		time_to_die;
-	long		time_to_sleep;
-	long		max_eat;
-	t_table		*table;
-	pthread_t	monitor_thread;
+	int			philo_id;        /**< Unique philosopher identifier */
+	int			philo_nbr;       /**< Total number of philosophers */
+	long		eating_flag;     /**< Flag indicating eating state */
+	long		n_eat;           /**< Number of times philosopher has eaten */
+	long		last_m;          /**< Timestamp of last meal */
+	long		time_to_eat;     /**< Time allowed to eat (in microseconds) */
+	long		time_to_die;     /**< Time before philosopher dies without eating */
+	long		time_to_sleep;   /**< Time allowed to sleep */
+	long		max_eat;         /**< Max times philosopher must eat */
+	t_table		*table;          /**< Pointer back to the table */
+	pthread_t	monitor_thread;  /**< Thread monitoring this philosopher */
 }				t_philo;
-//the table
+
+/**
+ * Table struct that manages overall simulation parameters, semaphores,
+ * and process IDs.
+ */
 typedef struct s_table
 {
-	int			philo_nbr;
-	long		time_to_eat;
-	long		time_to_die;
-	long		time_to_sleep;
-	long		max_eat;
-	long		start_simulation;
-	pid_t		monitor_pid;
-	pid_t		*pids;
-	sem_t		*forks;
-	sem_t		*to_write;
-	sem_t		*end_simulation;
-	sem_t		*last_meal;
-	sem_t		*death;
-	sem_t		*all_eat;
-	t_philo		*philos;
+	int			philo_nbr;         /**< Number of philosophers */
+	long		time_to_eat;       /**< Time to eat */
+	long		time_to_die;       /**< Time to die */
+	long		time_to_sleep;     /**< Time to sleep */
+	long		max_eat;           /**< Maximum meals */
+	long		start_simulation;  /**< Simulation start time */
+	pid_t		monitor_pid;       /**< Monitor process ID */
+	pid_t		*pids;             /**< Array of philosopher process IDs */
+	sem_t		*forks;            /**< Semaphore for forks */
+	sem_t		*to_write;         /**< Semaphore to synchronize writes */
+	sem_t		*end_simulation;   /**< Semaphore signaling simulation end */
+	sem_t		*last_meal;        /**< Semaphore protecting last meal time */
+	sem_t		*death;            /**< Semaphore signaling death event */
+	sem_t		*all_eat;          /**< Semaphore signaling all philosophers ate */
+	t_philo		*philos;           /**< Array of philosophers */
 }	t_table;
-//for write the philo status
+
+/**
+ * Enumeration representing philosopher status for logging.
+ */
 typedef enum s_status
 {
-	THINK,
-	SLEEP,
-	EAT,
-	DIE,
-	TAKE_FIRST,
-	TAKE_SECOND,
+	THINK,      /**< Philosopher is thinking */
+	SLEEP,      /**< Philosopher is sleeping */
+	EAT,        /**< Philosopher is eating */
+	DIE,        /**< Philosopher died */
+	TAKE_FIRST, /**< Philosopher took first fork */
+	TAKE_SECOND /**< Philosopher took second fork */
 }	t_status;
-//for get time
+
+/**
+ * Enumeration representing time formats.
+ */
 typedef enum s_time
 {
-	MILLISECOND,
+	MILLISECOND /**< Time format in milliseconds */
 }	t_time;
-//for errors
+
+/**
+ * Prints an error message to standard output.
+ *
+ * @param error Error message string.
+ */
 void	error_ex(const char *error);
-//parsing the input and init data
+
+/**
+ * Parses input arguments and initializes simulation data.
+ *
+ * @param table Pointer to simulation table.
+ * @param av Argument vector from main.
+ * @return 0 on success, -1 on failure.
+ */
 long	parsing_bonus(t_table *table, char **av);
+
+/**
+ * Initializes all required data structures and synchronization primitives.
+ *
+ * @param table Pointer to simulation table.
+ * @return 0 on success, -1 on failure.
+ */
 long	init_data_bonus(t_table *table);
-//the dinner
+
+/**
+ * Starts the philosopher dinner simulation.
+ *
+ * @param table Pointer to simulation table.
+ * @return 0 on success, -1 on failure.
+ */
 long	start_dinner_bonus(t_table *table);
+
+/**
+ * Routine executed by each philosopher process.
+ *
+ * @param philo Pointer to philosopher struct.
+ */
 void	start_routine(t_philo *philo);
+
+/**
+ * Performs eating routine for a philosopher.
+ *
+ * @param philo Pointer to philosopher struct.
+ */
 void	eat_routine(t_philo *philo);
+
+/**
+ * Makes philosopher think with optional logging.
+ *
+ * @param philo Pointer to philosopher struct.
+ * @param flag If true, logs thinking status.
+ */
 void	thinking(t_philo *philo, bool flag);
+
+/**
+ * Returns the current time in specified format.
+ *
+ * @param format Time format enum.
+ * @return Current time in milliseconds.
+ */
 long	gettime_b(t_time format);
+
+/**
+ * Monitor thread function to watch for simulation events.
+ *
+ * @param arg Pointer to table struct.
+ * @return NULL
+ */
 void	*monitor_dinner(void *arg);
+
+/**
+ * Frees all allocated resources.
+ *
+ * @param table Pointer to simulation table.
+ */
 void	free_all(t_table *table);
+
+/**
+ * Introduces desynchronization delay for philosophers.
+ *
+ * @param philo Pointer to philosopher struct.
+ */
 void	desync(t_philo *philo);
-//safe read and write
+
+/**
+ * Safely reads a long value protected by a semaphore.
+ *
+ * @param sem Semaphore protecting the value.
+ * @param dest Pointer to the long value.
+ * @return The value read.
+ */
 long	get_long(sem_t *sem, long *dest);
+
+/**
+ * Safely sets a long value protected by a semaphore.
+ *
+ * @param sem Semaphore protecting the value.
+ * @param dest Pointer to the long value.
+ * @param value Value to set.
+ */
 void	set_long(sem_t *sem, long *dest, long value);
+
+/**
+ * Writes philosopher status in a thread-safe manner.
+ *
+ * @param philo Pointer to philosopher struct.
+ * @param status Status to write.
+ * @param time Current timestamp.
+ */
 void	write_status(t_philo *philo, t_status status, long time);
 
-
 #endif
+

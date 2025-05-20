@@ -6,12 +6,18 @@
 /*   By: gpirozzi <giovannipirozzi12345@gmail.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 14:45:00 by gpirozzi          #+#    #+#             */
-/*   Updated: 2025/03/27 10:39:22 by gpirozzi         ###   ########.fr       */
+/*   Updated: 2025/05/20 17:37:46 by gpirozzi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_bonus.h"
 
+/**
+ * Checks if the character is a whitespace character.
+ *
+ * @param c The character to check.
+ * @return 1 if c is a whitespace (space, tab, newline, etc.), 0 otherwise.
+ */
 int	ft_isspace(char c)
 {
 	if ((c >= 9 && c <= 13) || c == 32)
@@ -19,6 +25,14 @@ int	ft_isspace(char c)
 	return (0);
 }
 
+/**
+ * Converts a string to a long integer.
+ * Returns -1 and prints an error if the string contains invalid characters,
+ * a negative sign, or a number larger than INT_MAX.
+ *
+ * @param s The input string.
+ * @return The converted long integer, or -1 on error.
+ */
 long	atol(const char *s)
 {
 	int		i;
@@ -44,6 +58,13 @@ long	atol(const char *s)
 	return (res);
 }
 
+/**
+ * Parses command line arguments to initialize the simulation parameters.
+ *
+ * @param table Pointer to the table struct to fill.
+ * @param av Argument vector containing the input strings.
+ * @return 0 on success, -1 on invalid input.
+ */
 long	parsing_bonus(t_table *table, char **av)
 {
 	table->philo_nbr = atol(av[1]);

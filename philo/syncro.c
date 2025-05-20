@@ -6,20 +6,31 @@
 /*   By: gpirozzi <giovannipirozzi12345@gmail.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 18:19:28 by gpirozzi          #+#    #+#             */
-/*   Updated: 2025/03/20 12:16:44 by gpirozzi         ###   ########.fr       */
+/*   Updated: 2025/05/20 17:25:15 by gpirozzi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
-#include <stdbool.h>
-#include <unistd.h>
-//spinlock to wait all threads
+
+/**
+ * Spinlock function that waits until all threads are ready.
+ * Continuously checks the 'threads_ready' flag protected by a mutex.
+ *
+ * @param table Pointer to the shared simulation table.
+ */
 void	wait_threads(t_table *table)
 {
 	while (!get_bool(&table->table_mtx, &table->threads_ready))
 		;
 }
 
+/**
+ * Gets the current time in the specified format.
+ * Uses gettimeofday and returns time in milliseconds.
+ *
+ * @param format The time format to return (currently only MILLISECOND supported).
+ * @return Current time in milliseconds on success, -1 on failure.
+ */
 long	gettime(t_time format)
 {
 	struct timeval	tv;
@@ -31,6 +42,13 @@ long	gettime(t_time format)
 	return (-1);
 }
 
+/**
+ * Introduces desynchronization delay among philosophers to prevent deadlocks.
+ * - For even number of philosophers, even IDs sleep a bit.
+ * - For odd number, odd IDs think initially (non-blocking delay).
+ *
+ * @param philo Pointer to the philosopher struct.
+ */
 void	desync(t_philo *philo)
 {
 	if (philo->table->philo_nbr % 2 == 0)

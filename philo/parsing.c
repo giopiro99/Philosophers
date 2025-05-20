@@ -6,12 +6,13 @@
 /*   By: gpirozzi <giovannipirozzi12345@gmail.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 12:28:10 by gpirozzi          #+#    #+#             */
-/*   Updated: 2025/03/20 11:56:44 by gpirozzi         ###   ########.fr       */
+/*   Updated: 2025/05/20 17:28:21 by gpirozzi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
+// Checks if the character is a whitespace character (space, tab, newline, etc.)
 int	ft_isspace(char c)
 {
 	if ((c >= 9 && c <= 13) || c == 32)
@@ -19,6 +20,7 @@ int	ft_isspace(char c)
 	return (0);
 }
 
+// Checks if the character is a digit ('0' to '9')
 int	ft_isdigit(char c)
 {
 	if (c >= '0' && c <= '9')
@@ -26,6 +28,7 @@ int	ft_isdigit(char c)
 	return (0);
 }
 
+// Converts string to a positive long integer; returns -1 on error or negative input
 long	ft_atol(const char *str)
 {
 	long		res;
@@ -52,12 +55,13 @@ long	ft_atol(const char *str)
 		return (-1);
 	return (res);
 }
-//av[1] = N_PHILO
-//av[2] = time_to_die
-//av[3] = time_to_eat
-//av[4] = time_to_sleep av[5] max_eat
-//*1000 for convert from ms into usec for usleep
-
+// Parses command line arguments into the t_table structure
+// av[1] = number_of_philosophers
+// av[2] = time_to_die (ms)
+// av[3] = time_to_eat (ms)
+// av[4] = time_to_sleep (ms)
+// av[5] = max_meals (optional)
+// Times are converted from milliseconds to microseconds (*1000) for usleep compatibility
 long	parsing(t_table *table, char **av)
 {
 	table->philo_nbr = ft_atol(av[1]);

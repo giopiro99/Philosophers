@@ -6,7 +6,7 @@
 /*   By: gpirozzi <giovannipirozzi12345@gmail.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 18:30:45 by gpirozzi          #+#    #+#             */
-/*   Updated: 2025/03/26 19:12:02 by gpirozzi         ###   ########.fr       */
+/*   Updated: 2025/05/20 17:24:25 by gpirozzi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,14 @@
 #include <pthread.h>
 #include <stdbool.h>
 
+/**
+ * Prints the current status of a philosopher in a thread-safe way.
+ * It locks the write mutex to avoid mixed output and only prints if simulation is not finished.
+ *
+ * @param philo Pointer to the philosopher struct.
+ * @param status The current status of the philosopher (e.g. THINK, EAT, DIE).
+ * @param time Current timestamp in milliseconds.
+ */
 void	to_write_status(t_philo *philo, t_write status, long time)
 {
 	long	start_simul;
@@ -35,11 +43,22 @@ void	to_write_status(t_philo *philo, t_write status, long time)
 	pthread_mutex_unlock(&philo->table->write_mutex);
 }
 
+/**
+ * Prints an error message to standard output.
+ *
+ * @param error The error message string.
+ */
 void	error_ex(const char *error)
 {
 	printf("%s", error);
 }
 
+/**
+ * Frees all allocated resources associated with the simulation.
+ * Destroys all mutexes and frees allocated arrays and the table itself.
+ *
+ * @param table Pointer to the simulation table struct.
+ */
 void	free_all(t_table *table)
 {
 	int	i;
@@ -59,6 +78,12 @@ void	free_all(t_table *table)
 	free(table);
 }
 
+/**
+ * Safely increments a long integer protected by a mutex.
+ *
+ * @param mutex Pointer to the mutex protecting the value.
+ * @param value Pointer to the long integer to increment.
+ */
 void	increase_long(t_mtx *mutex, long *value)
 {
 	pthread_mutex_lock(mutex);
@@ -66,6 +91,15 @@ void	increase_long(t_mtx *mutex, long *value)
 	pthread_mutex_unlock(mutex);
 }
 
+/**
+ * Checks if all threads are running by comparing a counter to the total number of philosophers.
+ * The access is protected by a mutex.
+ *
+ * @param mutex Mutex protecting the thread counter.
+ * @param thread Pointer to the counter variable.
+ * @param philo_nbr Total number of philosopher threads expected.
+ * @return true if all threads are running, false otherwise.
+ */
 bool	all_threads_running(t_mtx *mutex, long *thread, long philo_nbr)
 {
 	bool	ret;

@@ -6,12 +6,19 @@
 /*   By: gpirozzi <giovannipirozzi12345@gmail.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 15:01:52 by gpirozzi          #+#    #+#             */
-/*   Updated: 2025/03/27 11:14:34 by gpirozzi         ###   ########.fr       */
+/*   Updated: 2025/05/20 17:40:08 by gpirozzi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_bonus.h"
 
+/**
+ * Initializes philosopher structures within the table.
+ * Sets default values and associates each philosopher with the table.
+ * Also records the simulation start time.
+ *
+ * @param table Pointer to the simulation table.
+ */
 static void	init_philos(t_table *table)
 {
 	int	i;
@@ -33,6 +40,13 @@ static void	init_philos(t_table *table)
 	table->start_simulation = gettime_b(MILLISECOND);
 }
 
+/**
+ * Initializes shared semaphores and allocates memory for philosopher and PID arrays.
+ * Prepares synchronization primitives and philosopher data before simulation start.
+ *
+ * @param table Pointer to the simulation table.
+ * @return 0 on success, -1 on failure with error message printed.
+ */
 long	init_data_bonus(t_table *table)
 {
 	int	i;

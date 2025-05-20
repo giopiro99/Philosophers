@@ -6,12 +6,20 @@
 /*   By: gpirozzi <giovannipirozzi12345@gmail.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 15:21:34 by gpirozzi          #+#    #+#             */
-/*   Updated: 2025/03/27 11:18:29 by gpirozzi         ###   ########.fr       */
+/*   Updated: 2025/05/20 17:40:50 by gpirozzi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_bonus.h"
 
+/**
+ * Simulates the philosopher thinking state.
+ * Only philosophers in an odd-numbered group think for a calculated time.
+ * The thinking duration is adjusted based on eating and sleeping times.
+ *
+ * @param philo Pointer to the philosopher.
+ * @param flag If true, prints the thinking status.
+ */
 void	thinking(t_philo *philo, bool flag)
 {
 	long	t_think;
@@ -30,6 +38,14 @@ void	thinking(t_philo *philo, bool flag)
 	}
 }
 
+/**
+ * Executes the eating routine for a philosopher.
+ * The philosopher tries to pick up two forks (semaphores),
+ * waits for the eating duration, updates last meal time,
+ * then releases the forks.
+ *
+ * @param philo Pointer to the philosopher.
+ */
 void	eat_routine(t_philo *philo)
 {
 	if (philo->philo_id % 2 == 0)
@@ -45,6 +61,14 @@ void	eat_routine(t_philo *philo)
 	sem_post(philo->table->forks);
 }
 
+/**
+ * Starts the philosopher's life routine.
+ * Creates a monitor thread for checking death conditions.
+ * The routine cycles through eating, sleeping, and thinking states.
+ * Exits when philosopher reaches maximum eat count.
+ *
+ * @param philo Pointer to the philosopher.
+ */
 void	start_routine(t_philo *philo)
 {
 	set_long(philo->table->last_meal, &philo->last_m, gettime_b(MILLISECOND));
