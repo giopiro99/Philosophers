@@ -97,9 +97,12 @@ Structure:
     ├── monitoring_bonus.c  # Death check inside processes
     └── init_data_bonus.c   # Initialization of semaphores
 ```
-```text
-🧠 What I Learned
+
+***🧠 What I Learned***
 Race Conditions: How simultaneous access to data can corrupt memory and how to prevent it.
+
 Mutex vs Semaphores: The difference between binary locks (ownership) and counting signals (availability).
+
 Context Switching: The overhead differences between switching threads vs processes.
+
 Starvation: Designing logic to ensure fair resource distribution.
