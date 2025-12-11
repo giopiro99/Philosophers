@@ -65,8 +65,6 @@ make bonus
 Execution
 Run the simulation by passing the required arguments:
 ./philo [number_of_philosophers] [time_to_die] [time_to_eat] [time_to_sleep] [number_of_times_each_philosopher_must_eat]
-```
-```bash
 Example:
 Bash
 ./philo 5 800 200 200
@@ -74,7 +72,6 @@ Bash
 Die if they don't eat for 800ms
 Take 200ms to eat
 Take 200ms to sleep
-```text
 number_of_philosophers	count	The number of philosophers and also the number of forks.
 time_to_die	ms	If a philosopher doesn't start eating time_to_die ms after the beginning of their last meal, they die.
 time_to_eat	ms	The time it takes for a philosopher to eat. During this time, they hold two forks.
@@ -83,6 +80,7 @@ number_of_times_...	count	(Optional) If all philosophers have eaten at least thi
 ```
 
 ```text
+Structure:
 .
 ├── Makefile                # Compilation rules
 ├── philo/                  # Mandatory Part (Threads)
@@ -99,7 +97,7 @@ number_of_times_...	count	(Optional) If all philosophers have eaten at least thi
     ├── monitoring_bonus.c  # Death check inside processes
     └── init_data_bonus.c   # Initialization of semaphores
 ```
-
+```text
 🧠 What I Learned
 Race Conditions: How simultaneous access to data can corrupt memory and how to prevent it.
 Mutex vs Semaphores: The difference between binary locks (ownership) and counting signals (availability).
